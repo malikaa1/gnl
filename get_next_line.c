@@ -6,7 +6,7 @@
 /*   By: mrahmani <mrahmani@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/06/22 17:21:53 by mrahmani          #+#    #+#             */
-/*   Updated: 2020/06/22 18:59:18 by mrahmani         ###   ########.fr       */
+/*   Updated: 2020/06/22 19:51:51 by mrahmani         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,14 +35,15 @@ char	*extract_line(char *str)
 	return (NULL);
 }
 
-char	*readline(int fd, int **oef)
+char	*read_line(int fd, int **eof)
 {
 	char *str;
 	char buff[BUFF_SIZE];
-	int bytes;
+	size_t bytes;
 	char *val;
 
 	str = ft_strdup("");
+	bytes = 1;
 	while (ft_strchr(str, '\n') == NULL && bytes > 0)
 	{
 		bytes = read(fd, buff, BUFF_SIZE);
@@ -84,13 +85,14 @@ int main()
 {
 	int fd = open("file.txt", O_RDONLY);
 	char *line[1000];
+	char **c;
 
 	int ret = 1;
 	while (ret == 1)
 	{
 		ret = get_next_line(fd, line);
 		printf("=> %s\n", *line);
-		char **c = line;
+		c = line;
 		c++;
 	}
 	close(fd);
