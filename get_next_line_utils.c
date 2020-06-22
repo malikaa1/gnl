@@ -6,17 +6,17 @@
 /*   By: mrahmani <mrahmani@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/06/22 19:00:39 by mrahmani          #+#    #+#             */
-/*   Updated: 2020/06/22 19:16:42 by mrahmani         ###   ########.fr       */
+/*   Updated: 2020/06/22 21:47:02 by mrahmani         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
 
-size_t ft_strlen(const char *str)
+size_t	ft_strlen(const char *str)
 {
-	size_t i;
-	char *s;
-	
+	size_t	i;
+	char	*s;
+
 	s = (char *)str;
 	i = 0;
 	while (s[i])
@@ -26,17 +26,17 @@ size_t ft_strlen(const char *str)
 
 char	*ft_strdup(const char *src)
 {
-	char *ptr;
-	int i;
+	char	*ptr;
+	int		i;
 
- 	i = 0;
- 	if (!(ptr = malloc(ft_strlen(src) + 1)))
+	i = 0;
+	if (!(ptr = malloc(ft_strlen(src) + 1)))
 		return (NULL);
 	while (src[i])
 	{
 		ptr[i] = src[i];
 		i++;
-	 }	
+	}
 	ptr[i] = 0;
 	return (ptr);
 }
@@ -44,7 +44,7 @@ char	*ft_strdup(const char *src)
 char	*ft_strchr(char *str, int c)
 {
 	int i;
-	
+
 	i = 0;
 	while (str[i] != '\0')
 	{
@@ -57,11 +57,11 @@ char	*ft_strchr(char *str, int c)
 	return (NULL);
 }
 
-char *ft_strjoin(char const *s1, char const *s2)
+char	*ft_strjoin(char const *s1, char const *s2)
 {
-	char *ptr;
-	int i;
-	int j;
+	char	*ptr;
+	int		i;
+	int		j;
 
 	if (!s1 || !s2 || !(ptr = malloc(ft_strlen(s1) + ft_strlen(s2) + 1)))
 		return (NULL);
@@ -85,7 +85,7 @@ char	*ft_substr(char const *s, unsigned int start, size_t len)
 {
 	char			*ptr;
 	size_t			i;
-	
+
 	i = 0;
 	if (s == NULL)
 		return (NULL);
@@ -93,7 +93,7 @@ char	*ft_substr(char const *s, unsigned int start, size_t len)
 		return (ft_strdup(""));
 	ptr = malloc(sizeof(*ptr) * (len + 1));
 	if (ptr == NULL)
-		return (NULL);	
+		return (NULL);
 	while (i < len)
 	{
 		ptr[i] = s[start + i];
