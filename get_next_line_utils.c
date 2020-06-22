@@ -6,7 +6,7 @@
 /*   By: mrahmani <mrahmani@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/06/22 19:00:39 by mrahmani          #+#    #+#             */
-/*   Updated: 2020/06/22 19:05:26 by mrahmani         ###   ########.fr       */
+/*   Updated: 2020/06/22 19:16:42 by mrahmani         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,5 +38,67 @@ char	*ft_strdup(const char *src)
 		i++;
 	 }	
 	ptr[i] = 0;
+	return (ptr);
+}
+
+char	*ft_strchr(char *str, int c)
+{
+	int i;
+	
+	i = 0;
+	while (str[i] != '\0')
+	{
+		if (str[i] == c)
+			return ((char *)str + i);
+		i++;
+	}
+	if (str[i] == '\0' && c == '\0')
+		return ((char *)str + i);
+	return (NULL);
+}
+
+char *ft_strjoin(char const *s1, char const *s2)
+{
+	char *ptr;
+	int i;
+	int j;
+
+	if (!s1 || !s2 || !(ptr = malloc(ft_strlen(s1) + ft_strlen(s2) + 1)))
+		return (NULL);
+	i = 0;
+	while (s1[i])
+	{
+		ptr[i] = s1[i];
+		i++;
+	}
+	j = 0;
+	while (s2[j])
+	{
+		ptr[i + j] = s2[j];
+		j++;
+	}
+	ptr[i + j] = '\0';
+	return (ptr);
+}
+
+char	*ft_substr(char const *s, unsigned int start, size_t len)
+{
+	char			*ptr;
+	size_t			i;
+	
+	i = 0;
+	if (s == NULL)
+		return (NULL);
+	if (start > ft_strlen(s))
+		return (ft_strdup(""));
+	ptr = malloc(sizeof(*ptr) * (len + 1));
+	if (ptr == NULL)
+		return (NULL);	
+	while (i < len)
+	{
+		ptr[i] = s[start + i];
+		i++;
+	}
+	ptr[i] = '\0';
 	return (ptr);
 }
