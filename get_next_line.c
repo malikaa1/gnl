@@ -6,9 +6,92 @@
 /*   By: mrahmani <mrahmani@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/06/22 17:21:53 by mrahmani          #+#    #+#             */
-/*   Updated: 2020/06/22 17:22:29 by mrahmani         ###   ########.fr       */
+/*   Updated: 2020/06/22 18:59:18 by mrahmani         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
 
+char	*extract_line(char *str)
+{
+	char *line;
+	static int index;
+	int start;
+
+	index = 0;
+	start = index;
+	while(str[index] != '\0')
+	{
+		if (str[index] == '\n')
+		{
+			line = ft_substr(str, start, index - start);
+			index++;
+			return (line);
+		}
+		index++;
+	}
+	if ((index - start) > 0)
+		return (ft_substr(str, start, index - start));
+	return (NULL);
+}
+
+char	*readline(int fd, int **oef)
+{
+	char *str;
+	char buff[BUFF_SIZE];
+	int bytes;
+	char *val;
+
+	str = ft_strdup("");
+	while (ft_strchr(str, '\n') == NULL && bytes > 0)
+	{
+		bytes = read(fd, buff, BUFF_SIZE);
+		if (bytes > 0)
+		{
+			val = ft_substr(buff, 0, bytes);
+			str = ft_strjoin(str, val);
+			free(val);
+		}
+	}
+	if (bytes == 0)
+		**eof = 1;
+	return (str);
+}
+
+int		get_next_line(int fd, char **line)
+{
+	static char *str;
+	int eof;
+	int *ptr1;
+	int **ptr2;
+
+	eof = 0;
+	ptr1 = &eof;
+	ptr2 = &ptr1;
+	if (str == NULL)
+		str = ft_strdup("");
+	str = ft_strjoin(str, read_line(fd, ptr2));
+	if (str)
+	{
+		*line = extract_line(str);
+		if (*line != NULL && eof != 1)
+			return (1);
+		return (0);
+	}
+	return (0);
+}
+int main()
+{
+	int fd = open("file.txt", O_RDONLY);
+	char *line[1000];
+
+	int ret = 1;
+	while (ret == 1)
+	{
+		ret = get_next_line(fd, line);
+		printf("=> %s\n", *line);
+		char **c = line;
+		c++;
+	}
+	close(fd);
+}
