@@ -6,7 +6,7 @@
 /*   By: mrahmani <mrahmani@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/06/22 17:21:53 by mrahmani          #+#    #+#             */
-/*   Updated: 2020/06/22 21:25:45 by mrahmani         ###   ########.fr       */
+/*   Updated: 2020/06/25 23:17:16 by mrahmani         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,7 @@ char	*extract_line(char *str)
 char	*read_line(int fd, int **eof)
 {
 	char *str;
-	char buff[BUFF_SIZE];
+	char buff[BUFFER_SIZE];
 	size_t bytes;
 	char *val;
 
@@ -45,7 +45,7 @@ char	*read_line(int fd, int **eof)
 	bytes = 1;
 	while (ft_strchr(str, '\n') == NULL && bytes > 0)
 	{
-		bytes = read(fd, buff, BUFF_SIZE);
+		bytes = read(fd, buff, BUFFER_SIZE);
 		if (bytes > 0)
 		{
 			val = ft_substr(buff, 0, bytes);
@@ -74,12 +74,13 @@ int		get_next_line(int fd, char **line)
 	if (str)
 	{
 		*line = extract_line(str);
-		if (*line != NULL && eof != 1)
+		if ((*line != NULL && ft_strlen(*line) != 0) || eof != 1)
 			return (1);
 		return (0);
 	}
 	return (0);
 }
+/*
 int main()
 {
 	int fd = open("file.txt", O_RDONLY);
@@ -88,9 +89,4 @@ int main()
 	while (ret == 1)
 	{
 		ret = get_next_line(fd, line);
-		printf("=> %s\n", *line);
-		char **c = line;
-		c++;
-	}
-	close(fd);
-}
+		printf("=> %s*/
