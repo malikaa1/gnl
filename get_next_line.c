@@ -6,7 +6,7 @@
 /*   By: mrahmani <mrahmani@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/06/22 17:21:53 by mrahmani          #+#    #+#             */
-/*   Updated: 2020/06/25 23:17:16 by mrahmani         ###   ########.fr       */
+/*   Updated: 2020/06/28 21:24:07 by mrahmani         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,3 +90,43 @@ int main()
 	{
 		ret = get_next_line(fd, line);
 		printf("=> %s*/
+
+
+
+int main()
+
+{
+
+	    int fd = open("file.txt", O_RDONLY);
+
+		    char *line[1000];
+
+
+
+			    int ret = 1;
+
+				    while (ret == 1)
+
+						    {
+
+								        ret = get_next_line(fd, line);
+
+										        if (ret != 0)
+
+													        {
+
+																            printf("=> %s\n", *line);
+
+																			            char **c = line;
+
+																						            c++;
+
+																									        }
+
+												        //free(line);
+														//
+														//    }
+														//
+														//        close(fd);
+														//
+														//        }
