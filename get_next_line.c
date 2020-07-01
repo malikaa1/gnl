@@ -12,14 +12,14 @@
 
 #include "get_next_line.h"
 
-char	*extract_line(char *str)
+char *extract_line(char *str)
 {
 	char *line;
 	static int index = 0;
 	int start;
 
 	start = index;
-	while(str[index] != '\0')
+	while (str[index] != '\0')
 	{
 		if (str[index] == '\n')
 		{
@@ -34,8 +34,9 @@ char	*extract_line(char *str)
 	return (NULL);
 }
 
-char	*read_line(int fd, int **eof)
+char *read_line(int fd, int **eof)
 {
+	#if BUFFER_SIZE > 0
 	char *str;
 	char buff[BUFFER_SIZE];
 	size_t bytes;
@@ -56,14 +57,21 @@ char	*read_line(int fd, int **eof)
 	if (bytes == 0)
 		**eof = 1;
 	return (str);
+	#else
+		return NULL;
+	#endif
 }
 
-int		get_next_line(int fd, char **line)
+int get_next_line(int fd, char **line)
 {
 	static char *str;
 	int eof;
 	int *ptr1;
 	int **ptr2;
+	if(BUFFER_SIZE <= 0){
+		*line = ft_strdup("");
+		return 0;
+	}
 
 	eof = 0;
 	ptr1 = &eof;
@@ -76,6 +84,7 @@ int		get_next_line(int fd, char **line)
 		*line = extract_line(str);
 		if ((*line != NULL && ft_strlen(*line) != 0) || eof != 1)
 			return (1);
+		*line = ft_strdup("");
 		return (0);
 	}
 	return (0);
@@ -91,42 +100,19 @@ int main()
 		ret = get_next_line(fd, line);
 		printf("=> %s*/
 
-
-
-int main()
-
-{
-
-	    int fd = open("file.txt", O_RDONLY);
-
-		    char *line[1000];
-
-
-
-			    int ret = 1;
-
-				    while (ret == 1)
-
-						    {
-
-								        ret = get_next_line(fd, line);
-
-										        if (ret != 0)
-
-													        {
-
-																            printf("=> %s\n", *line);
-
-																			            char **c = line;
-
-																						            c++;
-
-																									        }
-
-												        //free(line);
-														//
-														//    }
-														//
-														//        close(fd);
-														//
-														//        }
+// int main()
+// {
+// 	int fd = open("file.txt", O_RDONLY);
+// 	char *line[1000];
+// 	int ret = 1;
+// 	while (ret == 1)
+// 	{
+// 		ret = get_next_line(fd, line);
+// 		if (ret != 0)
+// 		{
+// 			printf("=> %s\n", *line);
+// 			char **c = line;
+// 			c++;
+// 		}
+// 	}
+// }
