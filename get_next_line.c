@@ -12,14 +12,14 @@
 
 #include "get_next_line.h"
 
-char *extract_line(char *str)
+char *extract_line(char *str, int eof, int **last_line)
 {
 	char *line;
 	static int index = 0;
 	int start;
 
 	start = index;
-	while (str[index] != '\0')
+	while (str && str[index] != '\0')
 	{
 		if (str[index] == '\n')
 		{
@@ -29,14 +29,18 @@ char *extract_line(char *str)
 		}
 		index++;
 	}
-	if ((index - start) > 0)
+	if ((index - start) >= 0)
+	{
+		if (eof == 1)
+			**last_line = 1;
 		return (ft_substr(str, start, (index - start)));
+	}
 	return (NULL);
 }
 
+#if BUFFER_SIZE > 0
 char *read_line(int fd, int **eof)
 {
-	#if BUFFER_SIZE > 0
 	char *str;
 	char buff[BUFFER_SIZE];
 	size_t bytes;
@@ -57,10 +61,8 @@ char *read_line(int fd, int **eof)
 	if (bytes == 0)
 		**eof = 1;
 	return (str);
-	#else
-		return NULL;
-	#endif
 }
+#endif
 
 int get_next_line(int fd, char **line)
 {
@@ -68,7 +70,8 @@ int get_next_line(int fd, char **line)
 	int eof;
 	int *ptr1;
 	int **ptr2;
-	if(BUFFER_SIZE <= 0){
+	if (BUFFER_SIZE <= 0)
+	{
 		*line = ft_strdup("");
 		return 0;
 	}
@@ -81,10 +84,19 @@ int get_next_line(int fd, char **line)
 	str = ft_strjoin(str, read_line(fd, ptr2));
 	if (str)
 	{
-		*line = extract_line(str);
-		if ((*line != NULL && ft_strlen(*line) != 0) || eof != 1)
+		int i = 0;
+		int *last_line = &i;
+		*line = extract_line(str, eof, &last_line);
+		//if ((*line != NULL && ft_strlen(*line) != 0) || eof != 1)
+		if (i == 0)
+		{
+			// if (i == 1)
+			// {
+			// 	return 0;
+			// }
 			return (1);
-		*line = ft_strdup("");
+		}
+		free(str);
 		return (0);
 	}
 	return (0);
