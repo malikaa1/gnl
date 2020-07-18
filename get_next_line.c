@@ -12,28 +12,30 @@
 
 #include "get_next_line.h"
 
-char *extract_line(char *str, int eof, int **last_line)
+char *extract_line(char **str, int eof, int **last_line)
 {
 	char *line;
-	static int index = 0;
-	int start;
-
-	start = index;
-	while (str && str[index] != '\0')
+	int index = 0;
+	char *s = *str;
+	while (s && s[index] != '\0')
 	{
-		if (str[index] == '\n')
+		if (s[index] == '\n')
 		{
-			line = ft_substr(str, start, (index - start));
+			line = ft_substr(s, 0, index);
+			*str = ft_substr(s, index + 1, ft_strlen(s));
+			free(s);
 			index++;
 			return (line);
 		}
 		index++;
 	}
-	if ((index - start) >= 0)
+	if (index >= 0)
 	{
 		if (eof == 1)
+		{
 			**last_line = 1;
-		return (ft_substr(str, start, (index - start)));
+		}
+		return (ft_substr(s, 0, index));
 	}
 	return (NULL);
 }
@@ -72,7 +74,7 @@ int get_next_line(int fd, char **line)
 	int **ptr2;
 	if (BUFFER_SIZE <= 0)
 	{
-		*line = ft_strdup("");
+		*line = NULL;
 		return 0;
 	}
 
@@ -86,14 +88,9 @@ int get_next_line(int fd, char **line)
 	{
 		int i = 0;
 		int *last_line = &i;
-		*line = extract_line(str, eof, &last_line);
-		//if ((*line != NULL && ft_strlen(*line) != 0) || eof != 1)
+		*line = extract_line(&str, eof, &last_line);
 		if (i == 0)
 		{
-			// if (i == 1)
-			// {
-			// 	return 0;
-			// }
 			return (1);
 		}
 		free(str);
