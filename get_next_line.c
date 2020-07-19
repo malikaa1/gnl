@@ -23,7 +23,8 @@ char *extract_line(char **str, int eof, int **last_line)
 		{
 			line = ft_substr(s, 0, index);
 			*str = ft_substr(s, index + 1, ft_strlen(s));
-			free(s);
+			if (s != NULL)
+				free(s);
 			index++;
 			return (line);
 		}
@@ -82,12 +83,14 @@ int get_next_line(int fd, char **line)
 	ptr1 = &eof;
 	ptr2 = &ptr1;
 	if (str == NULL)
-		str = "";
-	char * new_line = read_line(fd, ptr2);
-	char* oldStr = str;
-	str = ft_strjoin(oldStr, new_line );
-	free(oldStr);
-	free(new_line);
+		str = ft_strdup("");
+	char *new_line = read_line(fd, ptr2);
+	char *oldStr = str;
+	str = ft_strjoin(oldStr, new_line);
+	if (oldStr != NULL)
+		free(oldStr);
+	if (new_line != NULL)
+		free(new_line);
 	if (str)
 	{
 		int i = 0;
@@ -95,7 +98,8 @@ int get_next_line(int fd, char **line)
 		*line = extract_line(&str, eof, &last_line);
 		if (i == 0)
 			return (1);
-		free(str);
+		if (str != NULL)
+			free(str);
 		str = NULL;
 		return (0);
 	}
