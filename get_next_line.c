@@ -48,7 +48,7 @@ char *read_line(int fd, int **eof)
 	size_t bytes;
 	char *val;
 
-	str = ft_strdup("");
+	str = "";
 	bytes = 1;
 	while (ft_strchr(str, '\n') == NULL && bytes > 0)
 	{
