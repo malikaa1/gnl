@@ -82,18 +82,21 @@ int get_next_line(int fd, char **line)
 	ptr1 = &eof;
 	ptr2 = &ptr1;
 	if (str == NULL)
-		str = ft_strdup("");
-	str = ft_strjoin(str, read_line(fd, ptr2));
+		str = "";
+	char * new_line = read_line(fd, ptr2);
+	char* oldStr = str;
+	str = ft_strjoin(oldStr, new_line );
+	free(oldStr);
+	free(new_line);
 	if (str)
 	{
 		int i = 0;
 		int *last_line = &i;
 		*line = extract_line(&str, eof, &last_line);
 		if (i == 0)
-		{
 			return (1);
-		}
 		free(str);
+		str = NULL;
 		return (0);
 	}
 	return (0);
