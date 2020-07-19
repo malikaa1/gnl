@@ -6,13 +6,15 @@
 /*   By: mrahmani <mrahmani@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/06/22 17:21:53 by mrahmani          #+#    #+#             */
-/*   Updated: 2020/06/28 21:24:07 by mrahmani         ###   ########.fr       */
+/*   Updated: 2020/07/19 17:10:34 by mrahmani         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
 void safe_free(void** ptr){
+//printf("freeing %s \n ",*ptr);
 	if(ptr){
+//		printf("can be freed \n");
 		free(*ptr);
 		*ptr = NULL;
 	}
@@ -54,7 +56,7 @@ char *read_line(int fd, int **eof)
 	size_t bytes;
 	char *val;
 
-	str = "";
+	str = ft_strdup("");
 	bytes = 1;
 	while (ft_strchr(str, '\n') == NULL && bytes > 0)
 	{
