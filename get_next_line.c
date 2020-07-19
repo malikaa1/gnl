@@ -11,6 +11,12 @@
 /* ************************************************************************** */
 
 #include "get_next_line.h"
+void safe_free(void* ptr){
+	if(ptr){
+		free(ptr);
+		ptr = NULL;
+	}
+}
 
 char *extract_line(char **str, int eof, int **last_line)
 {
@@ -23,8 +29,7 @@ char *extract_line(char **str, int eof, int **last_line)
 		{
 			line = ft_substr(s, 0, index);
 			*str = ft_substr(s, index + 1, ft_strlen(s));
-			if (s != NULL)
-				free(s);
+			safe_free(s);
 			index++;
 			return (line);
 		}
@@ -87,10 +92,8 @@ int get_next_line(int fd, char **line)
 	char *new_line = read_line(fd, ptr2);
 	char *oldStr = str;
 	str = ft_strjoin(oldStr, new_line);
-	if (oldStr != NULL)
-		free(oldStr);
-	if (new_line != NULL)
-		free(new_line);
+	free(oldStr);
+	free(new_line);
 	if (str)
 	{
 		int i = 0;
@@ -98,13 +101,13 @@ int get_next_line(int fd, char **line)
 		*line = extract_line(&str, eof, &last_line);
 		if (i == 0)
 			return (1);
-		if (str != NULL)
-			free(str);
-		str = NULL;
+		safe_free(str);
 		return (0);
 	}
 	return (0);
 }
+
+
 /*
 int main()
 {
