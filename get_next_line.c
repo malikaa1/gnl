@@ -24,14 +24,14 @@ char *extract_line(char **str, int eof, int **last_line)
 {
 	char *line;
 	int index = 0;
-	char *s = *str;
-	while (s && s[index] != '\0')
+	char *old_str = *str;
+	while (old_str && old_str[index] != '\0')
 	{
-		if (s[index] == '\n')
+		if (old_str[index] == '\n')
 		{
-			line = ft_substr(s, 0, index);
-			*str = ft_substr(s, index + 1, ft_strlen(s));
-			safe_free((void**)&s);
+			line = ft_substr(old_str, 0, index);
+			*str = ft_substr(old_str, index + 1, ft_strlen(old_str));
+			safe_free((void**)&old_str);
 			index++;
 			return (line);
 		}
@@ -43,7 +43,7 @@ char *extract_line(char **str, int eof, int **last_line)
 		{
 			**last_line = 1;
 		}
-		return (ft_substr(s, 0, index));
+		return (ft_substr(*str, 0, index));
 	}
 	return (NULL);
 }
@@ -64,8 +64,10 @@ char *read_line(int fd, int **eof)
 		if (bytes > 0)
 		{
 			val = ft_substr(buff, 0, bytes);
-			str = ft_strjoin(str, val);
-			free(val);
+			char* new_str = ft_strjoin(str, val);
+			safe_free((void**)&str);
+			safe_free((void**)&val);
+			str = new_str;
 		}
 	}
 	if (bytes == 0)
