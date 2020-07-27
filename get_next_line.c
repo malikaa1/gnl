@@ -48,7 +48,6 @@ char *extract_line(char **str, int eof, int **last_line)
 	return (NULL);
 }
 
-#if BUFFER_SIZE > 0
 char *read_line(int fd, int **eof, int **error)
 {
 	char *str;
@@ -80,7 +79,6 @@ char *read_line(int fd, int **eof, int **error)
 		**eof = 1;
 	return (str);
 }
-#endif
 
 int get_next_line(int fd, char **line)
 {
