@@ -27,6 +27,6 @@ char	*ft_strchr(char *str, int c);
 char	*ft_strjoin(char const *s1, char const *s2);
 char	*ft_substr(char const *str, unsigned int start, size_t len);
 int		get_next_line(int fd, char **line);
-char	*read_line(int fd, int **eof);
+char	*read_line(int fd, int **eof, int **error);
 
 #endif

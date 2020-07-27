@@ -49,7 +49,7 @@ char *extract_line(char **str, int eof, int **last_line)
 }
 
 #if BUFFER_SIZE > 0
-char *read_line(int fd, int **eof)
+char *read_line(int fd, int **eof, int **error)
 {
 	char *str;
 	char buff[BUFFER_SIZE + 1];
@@ -61,6 +61,11 @@ char *read_line(int fd, int **eof)
 	while (ft_strchr(str, '\n') == NULL && bytes > 0)
 	{
 		bytes = read(fd, buff, BUFFER_SIZE);
+		if (bytes > BUFFER_SIZE)
+		{
+			**error = -1;
+			return NULL;
+		}
 		if (bytes > 0)
 		{
 			buff[bytes] = '\0';
@@ -79,8 +84,9 @@ char *read_line(int fd, int **eof)
 
 int get_next_line(int fd, char **line)
 {
-	if (fd < 0)
+	if (fd < 0 || line == NULL)
 		return -1;
+
 	static char *str;
 	int eof;
 	int *ptr1;
@@ -96,7 +102,11 @@ int get_next_line(int fd, char **line)
 	ptr2 = &ptr1;
 	if (str == NULL)
 		str = ft_strdup("");
-	char *new_line = read_line(fd, ptr2);
+	int *error;
+	*error = 0;
+	char *new_line = read_line(fd, ptr2, &error);
+	if (*error == -1)
+		return -1;
 	char *oldStr = str;
 	str = ft_strjoin(oldStr, new_line);
 	safe_free((void **)&oldStr);
