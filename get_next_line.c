@@ -79,6 +79,8 @@ char *read_line(int fd, int **eof)
 
 int get_next_line(int fd, char **line)
 {
+	if (fd < 0)
+		return -1;
 	static char *str;
 	int eof;
 	int *ptr1;
