@@ -84,18 +84,18 @@ char *read_line(int fd, int **eof, int **error)
 
 int get_next_line(int fd, char **line)
 {
-	if (fd < 0 || line == NULL)
+	if (fd < 0 || line == NULL || BUFFER_SIZE <= 0)
 		return -1;
 
 	static char *str;
 	int eof;
 	int *ptr1;
 	int **ptr2;
-	if (BUFFER_SIZE <= 0)
-	{
-		*line = NULL;
-		return 0;
-	}
+	// if (BUFFER_SIZE <= 0)
+	// {
+	// 	*line = NULL;
+	// 	return 0;
+	// }
 
 	eof = 0;
 	ptr1 = &eof;
