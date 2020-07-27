@@ -102,8 +102,8 @@ int get_next_line(int fd, char **line)
 	ptr2 = &ptr1;
 	if (str == NULL)
 		str = ft_strdup("");
-	int *error;
-	*error = 0;
+	int x = 0;
+	int *error = &x;
 	char *new_line = read_line(fd, ptr2, &error);
 	if (*error == -1)
 		return -1;
