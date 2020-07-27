@@ -51,6 +51,10 @@ char *extract_line(char **str, int eof, int **last_line)
 char *read_line(int fd, int **eof, int **error)
 {
 	char *str;
+	if(BUFFER_SIZE <= 0){
+		**error = -1;
+		return NULL;
+	}
 	char buff[BUFFER_SIZE + 1];
 	size_t bytes;
 	char *val;
