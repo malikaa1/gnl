@@ -11,10 +11,10 @@
 /* ************************************************************************** */
 
 #include "get_next_line.h"
-void safe_free(void** ptr){
-//printf("freeing %s \n ",*ptr);
-	if(ptr){
-//		printf("can be freed \n");
+void safe_free(void **ptr)
+{
+	if (ptr)
+	{
 		free(*ptr);
 		*ptr = NULL;
 	}
@@ -31,7 +31,7 @@ char *extract_line(char **str, int eof, int **last_line)
 		{
 			line = ft_substr(old_str, 0, index);
 			*str = ft_substr(old_str, index + 1, ft_strlen(old_str));
-			safe_free((void**)&old_str);
+			safe_free((void **)&old_str);
 			index++;
 			return (line);
 		}
@@ -52,7 +52,7 @@ char *extract_line(char **str, int eof, int **last_line)
 char *read_line(int fd, int **eof)
 {
 	char *str;
-	char buff[BUFFER_SIZE];
+	char buff[BUFFER_SIZE + 1];
 	size_t bytes;
 	char *val;
 
@@ -63,10 +63,11 @@ char *read_line(int fd, int **eof)
 		bytes = read(fd, buff, BUFFER_SIZE);
 		if (bytes > 0)
 		{
+			buff[bytes] = '\0';
 			val = ft_substr(buff, 0, bytes);
-			char* new_str = ft_strjoin(str, val);
-			safe_free((void**)&str);
-			safe_free((void**)&val);
+			char *new_str = ft_strjoin(str, val);
+			safe_free((void **)&str);
+			safe_free((void **)&val);
 			str = new_str;
 		}
 	}
@@ -96,8 +97,8 @@ int get_next_line(int fd, char **line)
 	char *new_line = read_line(fd, ptr2);
 	char *oldStr = str;
 	str = ft_strjoin(oldStr, new_line);
-	safe_free((void**)&oldStr);
-	safe_free((void**)&new_line);
+	safe_free((void **)&oldStr);
+	safe_free((void **)&new_line);
 	if (str)
 	{
 		int i = 0;
@@ -105,12 +106,11 @@ int get_next_line(int fd, char **line)
 		*line = extract_line(&str, eof, &last_line);
 		if (i == 0)
 			return (1);
-		safe_free((void**)&str);
+		safe_free((void **)&str);
 		return (0);
 	}
 	return (0);
 }
-
 
 /*
 int main()
