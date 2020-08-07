@@ -133,20 +133,20 @@ int get_next_line(int fd, char **line)
 	return (0);
 }
 
-int main()
-{
-	int fd = open("file.txt", O_RDONLY);
+// int main()
+// {
+// 	int fd = open("file.txt", O_RDONLY);
 	
-	char *line[1000];
-	int ret = 1;
-	while (ret == 1)
-	{
-		ret = get_next_line(fd, line);
-		if (ret != 0)
-		{
-			printf("=> %s\n", *line);
-			char **c = line;
-			c++;
-		}
-	}
-}
+// 	char *line[1000];
+// 	int ret = 1;
+// 	while (ret == 1)
+// 	{
+// 		ret = get_next_line(fd, line);
+// 		if (ret != 0)
+// 		{
+// 			printf("=> %s\n", *line);
+// 			char **c = line;
+// 			c++;
+// 		}
+// 	}
+// }
