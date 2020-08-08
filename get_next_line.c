@@ -11,116 +11,118 @@
 /* ************************************************************************** */
 
 #include "get_next_line.h"
-void safe_free(void **ptr)
+void safe_free(char **ptr)
 {
-	if (ptr)
+	if (*ptr != NULL)
 	{
 		free(*ptr);
 		*ptr = NULL;
 	}
 }
-
-char *extract_line(char **str, int eof, int **last_line)
+char *find_line(char *old_str, int *index, char **str)
 {
 	char *line;
-	int index = 0;
-	char *old_str = *str;
+
+	line = ft_substr(old_str, 0, *index);
+	*str = ft_substr(old_str, *index + 1, ft_strlen(old_str));
+	safe_free(&old_str);
+	*index = *index + 1;
+	return (line);
+}
+char *extract_line(char **str, int eof, int *last_line)
+{
+	int index;
+	char *old_str;
+
+	index = 0;
+	old_str = *str;
 	while (old_str && old_str[index] != '\0')
 	{
 		if (old_str[index] == '\n')
-		{
-			line = ft_substr(old_str, 0, index);
-			*str = ft_substr(old_str, index + 1, ft_strlen(old_str));
-			safe_free((void **)&old_str);
-			index++;
-			return (line);
-		}
+			return (find_line(old_str, &index, str));
 		index++;
 	}
 	if (index >= 0)
 	{
 		if (eof == 1)
-		{
-			**last_line = 1;
-		}
+			*last_line = 1;
 		return (ft_substr(*str, 0, index));
 	}
 	return (NULL);
 }
+char *ft_read(size_t bytes, int *error, char buff[], char *str)
+{
+	char *val;
+	char *new_str;
 
-char *read_line(int fd, int **eof, int **error)
+	if (bytes > BUFFER_SIZE)
+	{
+		*error = -1;
+		return (NULL);
+	}
+	if (bytes > 0)
+	{
+		buff[bytes] = '\0';
+		val = ft_substr(buff, 0, bytes);
+		new_str = ft_strjoin(str, val);
+		safe_free(&str);
+		safe_free(&val);
+		str = new_str;
+	}
+	return (str);
+}
+char *read_line(int fd, int *eof, int *error)
 {
 	char *str;
-	if(BUFFER_SIZE <= 0){
-		**error = -1;
-		return NULL;
-	}
-	char buff[BUFFER_SIZE + 1];
 	size_t bytes;
-	char *val;
+	char buff[BUFFER_SIZE + 1];
 
 	str = ft_strdup("");
 	bytes = 1;
+	if (BUFFER_SIZE <= 0)
+	{
+		*error = -1;
+		return NULL;
+	}
 	while (ft_strchr(str, '\n') == NULL && bytes > 0)
 	{
 		bytes = read(fd, buff, BUFFER_SIZE);
-		if (bytes > BUFFER_SIZE)
-		{
-			**error = -1;
-			return NULL;
-		}
-		if (bytes > 0)
-		{
-			buff[bytes] = '\0';
-			val = ft_substr(buff, 0, bytes);
-			char *new_str = ft_strjoin(str, val);
-			safe_free((void **)&str);
-			safe_free((void **)&val);
-			str = new_str;
-		}
+		str = ft_read(bytes, error, buff, str);
 	}
 	if (bytes == 0)
-		**eof = 1;
+		*eof = 1;
 	return (str);
 }
 
 int get_next_line(int fd, char **line)
 {
-	if (fd < 0 || line == NULL || BUFFER_SIZE <= 0)
-		return -1;
-
 	static char *str;
 	int eof;
-	int *ptr1;
-	int **ptr2;
-	// if (BUFFER_SIZE <= 0)
-	// {
-	// 	*line = NULL;
-	// 	return 0;
-	// }
+	char *old_str;
+	char *new_line;
+	int error;
+	int last_line;
 
 	eof = 0;
-	ptr1 = &eof;
-	ptr2 = &ptr1;
+	if (fd < 0 || line == NULL || BUFFER_SIZE <= 0)
+		return -1;
 	if (str == NULL)
 		str = ft_strdup("");
-	int x = 0;
-	int *error = &x;
-	char *new_line = read_line(fd, ptr2, &error);
-	if (*error == -1)
+	error = 0;
+	new_line = read_line(fd, &eof, &error);
+	if (error == -1)
 		return -1;
-	char *oldStr = str;
-	str = ft_strjoin(oldStr, new_line);
-	safe_free((void **)&oldStr);
-	safe_free((void **)&new_line);
+	old_str = str;
+	str = ft_strjoin(old_str, new_line);
+	safe_free(&old_str);
+	safe_free(&new_line);
 	if (str)
 	{
-		int i = 0;
-		int *last_line = &i;
+		last_line = 0;
 		*line = extract_line(&str, eof, &last_line);
-		if (i == 0)
+		if (last_line == 0)
 			return (1);
-		safe_free((void **)&str);
+		safe_free(&str);
 		return (0);
 	}
 	return (0);
