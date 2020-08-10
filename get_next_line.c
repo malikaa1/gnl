@@ -103,12 +103,12 @@ int get_next_line(int fd, char **line)
 	free(new_line);
 	if (str)
 	{
-
 		last_line = 0;
 		*line = extract_line(&str, eof, &last_line);
 		if (last_line == 0)
 			return (1);
-		safe_free(&str);
+		free(str);
+		str = NULL;
 		return (0);
 	}
 	return (0);
