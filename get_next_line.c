@@ -25,7 +25,7 @@ char *find_line(char *old_str, int *index, char **str)
 
 	line = ft_substr(old_str, 0, *index);
 	*str = ft_substr(old_str, *index + 1, ft_strlen(old_str));
-	safe_free(&old_str);
+	free(old_str);
 	*index = *index + 1;
 	return (line);
 }
@@ -50,14 +50,14 @@ char *extract_line(char **str, int eof, int *last_line)
 	}
 	return (NULL);
 }
-char *ft_read(size_t bytes, int *error, char buff[], char *str)
+char *ft_read(size_t bytes, char buff[], char *str)
 {
 	char *val;
 	char *new_str;
 
 	if (bytes > BUFFER_SIZE)
 	{
-		*error = -1;
+		//*error = -1;
 		return (NULL);
 	}
 	if (bytes > 0)
@@ -65,13 +65,13 @@ char *ft_read(size_t bytes, int *error, char buff[], char *str)
 		buff[bytes] = '\0';
 		val = ft_substr(buff, 0, bytes);
 		new_str = ft_strjoin(str, val);
-		safe_free(&str);
-		safe_free(&val);
+		free(str);
+		free(val);
 		str = new_str;
 	}
 	return (str);
 }
-char *read_line(int fd, int *eof, int *error)
+char *read_line(int fd, int *eof)
 {
 	char *str;
 	size_t bytes;
@@ -79,15 +79,15 @@ char *read_line(int fd, int *eof, int *error)
 
 	str = ft_strdup("");
 	bytes = 1;
-	if (BUFFER_SIZE <= 0)
-	{
-		*error = -1;
-		return NULL;
-	}
+	// if (BUFFER_SIZE <= 0)
+	// {
+	// 	*error = -1;
+	// 	return NULL;
+	// }
 	while (ft_strchr(str, '\n') == NULL && bytes > 0)
 	{
 		bytes = read(fd, buff, BUFFER_SIZE);
-		str = ft_read(bytes, error, buff, str);
+		str = ft_read(bytes, buff, str);
 	}
 	if (bytes == 0)
 		*eof = 1;
@@ -98,9 +98,7 @@ int get_next_line(int fd, char **line)
 {
 	static char *str;
 	int eof;
-	char *old_str;
 	char *new_line;
-	int error;
 	int last_line;
 
 	eof = 0;
@@ -108,14 +106,9 @@ int get_next_line(int fd, char **line)
 		return -1;
 	if (str == NULL)
 		str = ft_strdup("");
-	error = 0;
-	new_line = read_line(fd, &eof, &error);
-	if (error == -1)
-		return -1;
-	old_str = str;
-	str = ft_strjoin(old_str, new_line);
-	safe_free(&old_str);
-	safe_free(&new_line);
+	new_line = read_line(fd, &eof);
+	str = ft_strjoin(str, new_line);
+	free(new_line);
 	if (str)
 	{
 		last_line = 0;
