@@ -50,16 +50,13 @@ char *extract_line(char **str, int eof, int *last_line)
 	}
 	return (NULL);
 }
-char *ft_read(size_t bytes, char buff[], char *str)
+char *ft_read(int bytes, char buff[], char *str)
 {
 	char *val;
 	char *new_str;
 
 	if (bytes > BUFFER_SIZE)
-	{
-		//*error = -1;
 		return (NULL);
-	}
 	if (bytes > 0)
 	{
 		buff[bytes] = '\0';
@@ -74,16 +71,11 @@ char *ft_read(size_t bytes, char buff[], char *str)
 char *read_line(int fd, int *eof)
 {
 	char *str;
-	size_t bytes;
+	int bytes;
 	char buff[BUFFER_SIZE + 1];
 
 	str = ft_strdup("");
 	bytes = 1;
-	// if (BUFFER_SIZE <= 0)
-	// {
-	// 	*error = -1;
-	// 	return NULL;
-	// }
 	while (ft_strchr(str, '\n') == NULL && bytes > 0)
 	{
 		bytes = read(fd, buff, BUFFER_SIZE);
@@ -111,7 +103,7 @@ int get_next_line(int fd, char **line)
 	free(new_line);
 	if (str)
 	{
-		
+
 		last_line = 0;
 		*line = extract_line(&str, eof, &last_line);
 		if (last_line == 0)
