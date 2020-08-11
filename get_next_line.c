@@ -53,7 +53,7 @@ char *extract_line(char **str, int eof, int *last_line)
 char *ft_read(int bytes, char buff[], char *str)
 {
 	char *val;
-	//char *new_str;
+	char *new_str;
 
 	if (bytes > BUFFER_SIZE)
 		return (NULL);
@@ -61,11 +61,10 @@ char *ft_read(int bytes, char buff[], char *str)
 	{
 		buff[bytes] = '\0';
 		val = ft_substr(buff, 0, bytes);
-		//new_str = ft_strjoin(str, val);
-		str = ft_strjoin(str, val);
-		//free(str);
+		new_str = ft_strjoin(str, val);
+		free(str);
 		free(val);
-		//str = new_str;
+		str = new_str;
 	}
 	return (str);
 }
