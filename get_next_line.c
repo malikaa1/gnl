@@ -19,27 +19,35 @@ void safe_free(char **ptr)
 		*ptr = NULL;
 	}
 }
-char *find_line(char *old_str, int *index, char **str)
-{
-	char *line;
+// char *find_line(char *old_str, int *index, char **str)
+// {
+// 	char *line;
 
-	line = ft_substr(old_str, 0, *index);
-	*str = ft_substr(old_str, *index + 1, ft_strlen(old_str));
-	free(old_str);
-	*index = *index + 1;
-	return (line);
-}
+// 	line = ft_substr(old_str, 0, *index);
+// 	*str = ft_substr(old_str, *index + 1, ft_strlen(old_str));
+// 	free(old_str);
+// 	*index = *index + 1;
+// 	return (line);
+// }
 char *extract_line(char **str, int eof, int *last_line)
 {
 	int index;
 	char *old_str;
+	char *line;
 
 	index = 0;
 	old_str = *str;
 	while (old_str && old_str[index] != '\0')
 	{
 		if (old_str[index] == '\n')
-			return (find_line(old_str, &index, str));
+		{
+			//return (find_line(old_str, &index, str));
+			line = ft_substr(old_str, 0, index);
+			*str = ft_substr(old_str, index + 1, ft_strlen(old_str));
+			free(old_str);
+			index++;
+			return (line);
+		}
 		index++;
 	}
 	if (index >= 0)
@@ -50,27 +58,29 @@ char *extract_line(char **str, int eof, int *last_line)
 	}
 	return (NULL);
 }
-char *ft_read(int bytes, char buff[], char *str)
-{
-	char *val;
-	char *new_str;
+// char *ft_read(int bytes, char buff[], char *str)
+// {
+// 	char *val;
+// 	//char *new_str;
 
-	if (bytes > BUFFER_SIZE)
-		return (NULL);
-	if (bytes > 0)
-	{
-		buff[bytes] = '\0';
-		val = ft_substr(buff, 0, bytes);
-		new_str = ft_strjoin(str, val);
-		free(str);
-		free(val);
-		str = new_str;
-	}
-	return (str);
-}
+// 	if (bytes > BUFFER_SIZE)
+// 		return (NULL);
+// 	if (bytes > 0)
+// 	{
+// 		buff[bytes] = '\0';
+// 		val = ft_substr(buff, 0, bytes);
+// 		//new_str = ft_strjoin(str, val);
+// 		str = ft_strjoin(str, val);
+// 		//free(str);
+// 		free(val);
+// 		//str = new_str;
+// 	}
+// 	return (str);
+// }
 char *read_line(int fd, int *eof)
 {
 	char *str;
+	char *val;
 	int bytes;
 	char buff[BUFFER_SIZE + 1];
 
@@ -79,7 +89,15 @@ char *read_line(int fd, int *eof)
 	while (ft_strchr(str, '\n') == NULL && bytes > 0)
 	{
 		bytes = read(fd, buff, BUFFER_SIZE);
-		str = ft_read(bytes, buff, str);
+		if (bytes > BUFFER_SIZE)
+			return (NULL);
+		if (bytes > 0)
+		{
+			buff[bytes] = '\0';
+			val = ft_substr(buff, 0, bytes);
+			str = ft_strjoin(str, val);
+			free(val);
+		}
 	}
 	if (bytes == 0)
 		*eof = 1;
