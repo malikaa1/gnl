@@ -107,8 +107,7 @@ int get_next_line(int fd, char **line)
 		*line = extract_line(&str, eof, &last_line);
 		if (last_line == 0)
 			return (1);
-		free(str);
-		str = NULL;
+		safe_free(&str);
 		return (0);
 	}
 	return (0);
