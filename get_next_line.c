@@ -19,35 +19,27 @@ void safe_free(char **ptr)
 		*ptr = NULL;
 	}
 }
-// char *find_line(char *old_str, int *index, char **str)
-// {
-// 	char *line;
+char *find_line(char *old_str, int *index, char **str)
+{
+	char *line;
 
-// 	line = ft_substr(old_str, 0, *index);
-// 	*str = ft_substr(old_str, *index + 1, ft_strlen(old_str));
-// 	free(old_str);
-// 	*index = *index + 1;
-// 	return (line);
-// }
+	line = ft_substr(old_str, 0, *index);
+	*str = ft_substr(old_str, *index + 1, ft_strlen(old_str));
+	free(old_str);
+	*index = *index + 1;
+	return (line);
+}
 char *extract_line(char **str, int eof, int *last_line)
 {
 	int index;
 	char *old_str;
-	char *line;
 
 	index = 0;
 	old_str = *str;
 	while (old_str && old_str[index] != '\0')
 	{
 		if (old_str[index] == '\n')
-		{
-			//return (find_line(old_str, &index, str));
-			line = ft_substr(old_str, 0, index);
-			*str = ft_substr(old_str, index + 1, ft_strlen(old_str));
-			free(old_str);
-			index++;
-			return (line);
-		}
+			return (find_line(old_str, &index, str));
 		index++;
 	}
 	if (index >= 0)
@@ -98,6 +90,7 @@ char *read_line(int fd, int *eof)
 			str = ft_strjoin(str, val);
 			free(val);
 		}
+	//	return (str);
 	}
 	if (bytes == 0)
 		*eof = 1;
