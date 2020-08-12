@@ -6,7 +6,7 @@
 /*   By: mrahmani <mrahmani@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/06/22 17:21:53 by mrahmani          #+#    #+#             */
-/*   Updated: 2020/07/19 17:10:34 by mrahmani         ###   ########.fr       */
+/*   Updated: 2020/08/12 12:06:14 by mrahmani         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,6 +92,8 @@ int get_next_line(int fd, char **line)
 	int eof;
 	char *new_line;
 	int last_line;
+	char *old_str;
+
 
 	eof = 0;
 	if (fd < 0 || line == NULL || BUFFER_SIZE <= 0)
@@ -99,15 +101,18 @@ int get_next_line(int fd, char **line)
 	if (str == NULL)
 		str = ft_strdup("");
 	new_line = read_line(fd, &eof);
-	str = ft_strjoin(str, new_line);
+	old_str = str;	
+	str = ft_strjoin(old_str, new_line);
 	free(new_line);
+	free(old_str);
 	if (str)
 	{
 		last_line = 0;
 		*line = extract_line(&str, eof, &last_line);
 		if (last_line == 0)
 			return (1);
-		safe_free(&str);
+		free(str);
+		str = NULL;
 		return (0);
 	}
 	return (0);
